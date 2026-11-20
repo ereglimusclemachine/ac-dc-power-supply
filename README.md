@@ -41,7 +41,23 @@ Hesapların tamamı [`hesaplamalar/tasarim_hesaplari.py`](hesaplamalar/tasarim_h
 
 ## 2. LTspice simülasyonu
 
-🔄 *Devam ediyor:* devre şeması, dalga şekilleri ve elle hesaplanan değerlerle karşılaştırma `simulasyon/` klasörüne eklenecek.
+**Aşama 2a: Köprü doğrultucu ve filtre (regülatörsüz)**: [`simulasyon/kopru_dogrultucu.asc`](simulasyon/kopru_dogrultucu.asc)
+
+Trafo, 16.97 V tepe değerli 50 Hz sinüs kaynağı ile modellendi. Yük olarak 150 Ω (≈100 mA) kullanıldı. Ölçümler, devre oturduktan sonraki 60–100 ms aralığında `.meas` komutlarıyla alındı.
+
+![LTspice sonucu](simulasyon/ltspice_sonuc.png)
+
+*Mavi: trafo çıkışı (AC giriş). Yeşil: kondansatör üzerindeki DC çıkış.*
+
+| Büyüklük | Elle hesap | LTspice | Fark |
+|---|---|---|---|
+| Çıkış tepe gerilimi | 15.17 V | 15.22 V | %0.3 |
+| Çıkış minimum gerilimi | 14.17 V | 14.40 V | %1.6 |
+| Dalgalanma (tepe-tepe) | 1.00 V | 0.82 V | %18 |
+
+**Yorum:** Tepe gerilimi hesapla neredeyse birebir uyuşuyor. Dalgalanma ise simülasyonda daha düşük çıktı. Bunun nedeni, ΔV = I/(f·C) formülünün kondansatörün periyodun **tamamında** deşarj olduğunu varsaymasıdır. Gerçekte diyotlar her yarım periyodun bir kısmında kondansatörü yeniden şarj eder, yani deşarj süresi 10 ms'den kısadır. Ayrıca yük akımı, gerilim düştükçe 100 mA'in biraz altına iner. Bu yüzden formül **güvenli tarafta kalan** (kötümser) bir tahmin verir, ki tasarım için istenen de budur.
+
+🔄 *Sıradaki adım:* 7805 regülatörünün eklenmesi ve farklı kondansatör değerleriyle (470 µF, 2200 µF) karşılaştırma.
 
 ## 3. Breadboard uygulaması ve ölçümler
 
